@@ -72,6 +72,9 @@
             "@auto-scripts"
         ]
     },
+    "scripts-descriptions": {
+        "start": "Démarre le serveur web local Symfony"
+    },
     "conflict": {
         "symfony/symfony": "*"
     },
