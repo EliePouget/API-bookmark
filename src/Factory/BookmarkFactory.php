@@ -47,12 +47,12 @@ final class BookmarkFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'creationDate' => self::faker()->dateTime(),
-            'description' => self::faker()->text(),
+            'creationDate' => self::faker()->dateTimeBetween('-2 years','now'),
+            'description' => self::faker()->paragraph(),
             'isPublic' => self::faker()->boolean(),
-            'name' => self::faker()->text(255),
-            'rateAverage' => self::faker()->randomFloat(),
-            'url' => self::faker()->text(),
+            'name' => self::faker()->company(),
+            'rateAverage' => 0,
+            'url' => self::faker()->url(),
         ];
     }
 
