@@ -68,7 +68,6 @@ final class UserFactory extends ModelFactory
         $icon = new \Jdenticon\Identicon();
         $icon->setValue($value);
         $icon->setSize(50);
-        $icon->displayImage('png');
         return fopen($icon->getImageDataUri('png'),'r');
     }
 
