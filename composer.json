@@ -58,6 +58,9 @@
         "symfony/polyfill-php72": "*"
     },
     "scripts": {
+        "start" : [
+            "Composer\\Config::disableProcessTimeout",
+            "symfony serve"],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
