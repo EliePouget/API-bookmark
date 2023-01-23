@@ -42,3 +42,5 @@ Modifier la configuration requise minimal **PHP >=8.0**
 **fix:cs** : corrige le code
 
 **test** : déclenche test:cs
+
+**db** : Supprime l'ancienne base de donnée et créer une nouvelle, fait la migration puis ajoute des données dedans
