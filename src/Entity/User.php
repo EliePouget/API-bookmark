@@ -21,7 +21,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     new Put(),
     new Patch()],
     normalizationContext: ['groups' => ['get_User']],
-    denormalizationContext: ['groups'=> ['set_User']])
+    denormalizationContext: ['groups'=> ['set_User']],
+    security: "is_granted('ROLE_USER')")
 ]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -30,6 +31,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['get_User'])]
+    #[Put(security: "object.owner == user")]
+    #[Patch(security: "object.owner == user")]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
