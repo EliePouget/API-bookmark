@@ -61,6 +61,9 @@
         "start" : [
             "Composer\\Config::disableProcessTimeout",
             "symfony serve"],
+        "test:cs" : "php-cs-fixer fix --dry-run",
+        "fix:cs" : "php-cs-fixer fix",
+        "test" : "@test:cs",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
