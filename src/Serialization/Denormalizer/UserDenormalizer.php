@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Serialization\Denormalizer;
 
-use ContainerDbGqXSx\getSecurity_Command_UserPasswordHashService;
+use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -11,6 +11,8 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 
 class UserDenormalizer implements \Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface, \Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface
 {
+    use DenormalizerAwareTrait;
+
     const ALREADY_CALLED = 'USER_DENORMALIZER_ALREADY_CALLED';
     private UserPasswordHasher $passwordHash;
     private Security $security;
@@ -23,13 +25,12 @@ class UserDenormalizer implements \Symfony\Component\Serializer\Normalizer\Conte
     /**
      * @inheritDoc
      */
-    public function supportsDenormalization($data, string $type, string $format = null, array $context = [])
+    public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
     {
-        $res = false;
-        if (!$context[self::ALREADY_CALLED] && $type == "User"){
-            $res = true;
+        if (!isset($context[self::ALREADY_CALLED]) && $type == User::class){
+            return true;
         }
-        return $res;
+        return false;
     }
 
     /**
@@ -37,16 +38,10 @@ class UserDenormalizer implements \Symfony\Component\Serializer\Normalizer\Conte
      */
     public function denormalize($data, string $type, string $format = null, array $context = [])
     {
-
         $context[self::ALREADY_CALLED] = true;
-        if($data){
-            $this->passwordHash->hashPassword($this->security->getUser(), $data);
+        if(isset($data['password'])) {
+            $data['password'] = $this->passwordHash->hashPassword($this->security->getUser(), $data['password']);
         }
-        return $this->setDenormalizer();
+        return $this->denormalize($data, $type, $format, $context);
     }
-
-    public function setDenormalizer(DenormalizerInterface $denormalizer)
-    {
-        // TODO: Implement setDenormalizer() method.
-    }
-}
+ }
