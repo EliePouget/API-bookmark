@@ -68,10 +68,14 @@
         ],
         "start" : [
             "Composer\\Config::disableProcessTimeout",
-            "symfony serve"],
+            "symfony serve"
+        ],
         "test:cs" : "php-cs-fixer fix --dry-run",
         "fix:cs" : "php-cs-fixer fix",
-        "test" : "@test:cs",
+        "test" : [
+            "@test:cs",
+            "@test:codeception"
+        ],
         "db" : [
             "php bin/console doctrine:database:drop --force",
             "php bin/console doctrine:database:create",
