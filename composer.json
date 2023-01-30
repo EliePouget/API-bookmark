@@ -59,6 +59,13 @@
         "symfony/polyfill-php72": "*"
     },
     "scripts": {
+        "test:codeception" : [
+            "php vendor/bin/codecept clean",
+            "APP_ENV=test php bin/console doctrine:database:drop --force",
+            "APP_ENV=test php bin/console doctrine:database:create",
+            "APP_ENV=test php bin/console doctrine:schema:create --quiet",
+            "SYMFONY_DEPRECATIONS_HELPER=weak php vendor/bin/codecept run --no-artifacts"
+        ],
         "start" : [
             "Composer\\Config::disableProcessTimeout",
             "symfony serve"],
