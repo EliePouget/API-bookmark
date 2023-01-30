@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
@@ -17,13 +16,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['get_User']],
-    denormalizationContext: ['groups'=> ['set_User']],
-    security: "is_granted('ROLE_USER')")
-]
-#[Get()]
-#[Put(security: "object == user")]
-#[Patch(security: "object == user")]
-
+    denormalizationContext: ['groups' => ['set_User']]
+)]
+#[Get]
+#[Put(
+    security: 'is_granted("ROLE_USER") and object == user')]
+#[Patch(
+    security: 'is_granted("ROLE_USER") and object == user')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

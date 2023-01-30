@@ -12,21 +12,21 @@ use Zenstruck\Foundry\RepositoryProxy;
 /**
  * @extends ModelFactory<User>
  *
- * @method        User|Proxy create(array|callable $attributes = [])
- * @method static User|Proxy createOne(array $attributes = [])
- * @method static User|Proxy find(object|array|mixed $criteria)
- * @method static User|Proxy findOrCreate(array $attributes)
- * @method static User|Proxy first(string $sortedField = 'id')
- * @method static User|Proxy last(string $sortedField = 'id')
- * @method static User|Proxy random(array $attributes = [])
- * @method static User|Proxy randomOrCreate(array $attributes = [])
+ * @method        User|Proxy                     create(array|callable $attributes = [])
+ * @method static User|Proxy                     createOne(array $attributes = [])
+ * @method static User|Proxy                     find(object|array|mixed $criteria)
+ * @method static User|Proxy                     findOrCreate(array $attributes)
+ * @method static User|Proxy                     first(string $sortedField = 'id')
+ * @method static User|Proxy                     last(string $sortedField = 'id')
+ * @method static User|Proxy                     random(array $attributes = [])
+ * @method static User|Proxy                     randomOrCreate(array $attributes = [])
  * @method static UserRepository|RepositoryProxy repository()
- * @method static User[]|Proxy[] all()
- * @method static User[]|Proxy[] createMany(int $number, array|callable $attributes = [])
- * @method static User[]|Proxy[] createSequence(array|callable $sequence)
- * @method static User[]|Proxy[] findBy(array $attributes)
- * @method static User[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
- * @method static User[]|Proxy[] randomSet(int $number, array $attributes = [])
+ * @method static User[]|Proxy[]                 all()
+ * @method static User[]|Proxy[]                 createMany(int $number, array|callable $attributes = [])
+ * @method static User[]|Proxy[]                 createSequence(array|callable $sequence)
+ * @method static User[]|Proxy[]                 findBy(array $attributes)
+ * @method static User[]|Proxy[]                 randomRange(int $min, int $max, array $attributes = [])
+ * @method static User[]|Proxy[]                 randomSet(int $number, array $attributes = [])
  */
 final class UserFactory extends ModelFactory
 {
@@ -42,7 +42,6 @@ final class UserFactory extends ModelFactory
         parent::__construct();
 
         $this->passwordHasher = $passwordHasher;
-
     }
 
     /**
@@ -54,6 +53,7 @@ final class UserFactory extends ModelFactory
     {
         $firstname = self::faker()->firstName();
         $lastname = self::faker()->lastName();
+
         return [
             'avatar' => self::createAvatar($lastname.$firstname),
             'firstname' => $firstname,
@@ -64,11 +64,14 @@ final class UserFactory extends ModelFactory
             'roles' => [],
         ];
     }
-    protected static function createAvatar(string $value){
+
+    protected static function createAvatar(string $value)
+    {
         $icon = new \Jdenticon\Identicon();
         $icon->setValue($value);
         $icon->setSize(50);
-        return fopen($icon->getImageDataUri('png'),'r');
+
+        return fopen($icon->getImageDataUri('png'), 'r');
     }
 
     /**
@@ -77,7 +80,7 @@ final class UserFactory extends ModelFactory
     protected function initialize(): self
     {
         return $this
-            ->afterInstantiate(function(User $user){
+            ->afterInstantiate(function (User $user) {
                 $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             })
         ;

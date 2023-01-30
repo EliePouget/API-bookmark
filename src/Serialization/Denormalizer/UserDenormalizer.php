@@ -1,20 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Serialization\Denormalizer;
 
-use App\Entity\User;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 
 class UserDenormalizer implements \Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface, \Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
 
-    const ALREADY_CALLED = 'USER_DENORMALIZER_ALREADY_CALLED';
+    public const ALREADY_CALLED = 'USER_DENORMALIZER_ALREADY_CALLED';
     private UserPasswordHasherInterface $passwordHash;
     private Security $security;
 
@@ -23,26 +21,29 @@ class UserDenormalizer implements \Symfony\Component\Serializer\Normalizer\Conte
         $this->passwordHash = $passwordHash;
         $this->security = $security;
     }
+
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
     {
-        if (!isset($context[self::ALREADY_CALLED]) && $type == User::class){
+        if (!isset($context[self::ALREADY_CALLED]) && 'password' == $type) {
             return true;
         }
+
         return false;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function denormalize($data, string $type, string $format = null, array $context = [])
     {
         $context[self::ALREADY_CALLED] = true;
-        if(isset($data['password'])) {
+        if (isset($data['password'])) {
             $data['password'] = $this->passwordHash->hashPassword($this->security->getUser(), $data['password']);
         }
+
         return $this->denormalize($data, $type, $format, $context);
     }
- }
+}

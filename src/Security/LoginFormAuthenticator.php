@@ -26,11 +26,10 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
     }
+
     /**
      * Override to control what happens when the user hits a secure page
      * but isn't logged in yet.
-     *
-     * @return RedirectResponse
      *
      * @throws HttpException
      */
@@ -46,6 +45,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         return new RedirectResponse($url);
     }
+
     public function authenticate(Request $request): Passport
     {
         $login = $request->request->get('login', '');
