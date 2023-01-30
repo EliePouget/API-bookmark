@@ -5,6 +5,7 @@ namespace App\Serialization\Denormalizer;
 
 use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -14,10 +15,10 @@ class UserDenormalizer implements \Symfony\Component\Serializer\Normalizer\Conte
     use DenormalizerAwareTrait;
 
     const ALREADY_CALLED = 'USER_DENORMALIZER_ALREADY_CALLED';
-    private UserPasswordHasher $passwordHash;
+    private UserPasswordHasherInterface $passwordHash;
     private Security $security;
 
-    public function __construct(UserPasswordHasher $passwordHash, Security $security)
+    public function __construct(UserPasswordHasherInterface $passwordHash, Security $security)
     {
         $this->passwordHash = $passwordHash;
         $this->security = $security;
