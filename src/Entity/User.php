@@ -18,11 +18,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['get_User']],
     denormalizationContext: ['groups' => ['set_User']]
 )]
+#[ORM\Table(name: 'user')]
 #[Get]
-#[Put(
-    security: 'is_granted("ROLE_USER") and object == user')]
-#[Patch(
-    security: 'is_granted("ROLE_USER") and object == user')]
+#[Put(security: 'object == user')]
+#[Patch(security: 'object == user')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

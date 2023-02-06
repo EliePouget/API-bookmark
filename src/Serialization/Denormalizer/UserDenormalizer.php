@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Serialization\Denormalizer;
 
+use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -27,7 +28,7 @@ class UserDenormalizer implements \Symfony\Component\Serializer\Normalizer\Conte
      */
     public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
     {
-        if (!isset($context[self::ALREADY_CALLED]) && 'password' == $type) {
+        if (!isset($context[self::ALREADY_CALLED]) && User::class === $type) {
             return true;
         }
 
@@ -44,6 +45,6 @@ class UserDenormalizer implements \Symfony\Component\Serializer\Normalizer\Conte
             $data['password'] = $this->passwordHash->hashPassword($this->security->getUser(), $data['password']);
         }
 
-        return $this->denormalize($data, $type, $format, $context);
+        return $this->denormalizer->denormalize($data, $type, $format, $context);
     }
 }

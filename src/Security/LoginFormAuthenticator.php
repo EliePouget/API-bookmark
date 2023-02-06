@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
@@ -22,22 +23,21 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'app_login';
+    private RouterInterface $router;
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator, RouterInterface $router)
     {
+        $this->router = $router;
     }
 
     /**
      * Override to control what happens when the user hits a secure page
      * but isn't logged in yet.
-     *
-     * @throws HttpException
      */
     public function start(Request $request, AuthenticationException $authException = null): RedirectResponse
     {
         /** @var string $route Current route */
         $route = $request->get('_route');
-        // API route ?
         if (str_starts_with($route, '_api_')) {
             throw new HttpException(Response::HTTP_UNAUTHORIZED);
         }
@@ -63,7 +63,8 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new RedirectResponse('http://127.0.0.1:8000/api');
+//        return new RedirectResponse('http://127.0.0.1:8000/api');
+        return new RedirectResponse($this->router->generate('api_doc'));
     }
 
     protected function getLoginUrl(Request $request): string
