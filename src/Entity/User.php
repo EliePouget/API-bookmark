@@ -30,20 +30,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
             uriTemplate: '/me',
             controller: GetMeController::class,
             openapiContext: [
-                'description' => "Récupérer nos informations",
+                'description' => 'Récupérer nos informations',
                 'summary' => 'Permet de récupérer son id, login, firstname, lastname, email',
                 'responses' => [
                     '200' => [
-                        'description' => "Un utilisateur est retourné"
+                        'description' => 'Un utilisateur est retourné',
                     ],
                     '401' => [
-                        'description' => "Utilisateur non connecté"
-                    ]
-                ]
+                        'description' => 'Utilisateur non connecté',
+                    ],
+                ],
                 ],
             paginationEnabled: false,
             normalizationContext: ['groups' => ['get_Me', 'get_User']]
-        ),],
+        ), ],
     denormalizationContext: ['groups' => ['set_User']],
     openapiContext: ['content' => [
                         'image/png' => [
