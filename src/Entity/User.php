@@ -18,18 +18,32 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-    operations: [new Get(
-        uriTemplate: '/users/{id}/avatar',
-        formats: [
-            'png' => 'image/png',
-        ],
-        controller: GetAvatarController::class,
-    ),
+    operations: [
+        new Get(
+            uriTemplate: '/users/{id}/avatar',
+            formats: [
+                'png' => 'image/png',
+            ],
+            controller: GetAvatarController::class,
+        ),
         new GetCollection(
             uriTemplate: '/me',
             controller: GetMeController::class,
+            openapiContext: [
+                'description' => "Récupérer nos informations",
+                'summary' => 'Permet de récupérer son id, login, firstname, lastname, email',
+                'responses' => [
+                    '200' => [
+                        'description' => "Un utilisateur est retourné"
+                    ],
+                    '401' => [
+                        'description' => "Utilisateur non connecté"
+                    ]
+                ]
+                ],
+            paginationEnabled: false,
+            normalizationContext: ['groups' => ['get_Me', 'get_User']]
         ),],
-    normalizationContext: ['groups' => ['get_User']],
     denormalizationContext: ['groups' => ['set_User']],
     openapiContext: ['content' => [
                         'image/png' => [
@@ -39,10 +53,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
                             ],
                         ],
                     ],
-                ]
+                ],
 )]
 #[ORM\Table(name: 'user')]
-#[Get]
+#[Get(security: "is_granted('ROLE_USER')")]
 #[Put(security: 'object == user')]
 #[Patch(security: 'object == user')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -79,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $avatar = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['set_User'])]
+    #[Groups(['set_User', 'get_Me'])]
     private ?string $mail = null;
 
     public function getId(): ?int
