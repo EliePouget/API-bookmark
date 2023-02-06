@@ -30,9 +30,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
                             'schema' => [
                                 'type' => 'string',
                                 'format' => 'binary',
-                            ]
-                        ]
-                    ]
+                            ],
+                        ],
+                    ],
                 ]
 )]
 #[ORM\Table(name: 'user')]
@@ -70,7 +70,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\Column(type: Types::BLOB)]
-    #[Groups(['get_User'])]
     private $avatar = null;
 
     #[ORM\Column(length: 100)]
