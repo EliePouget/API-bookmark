@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
+use App\Controller\GetAvatarController;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,8 +16,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
+    operations: [new Get(
+        uriTemplate: '/users/{id}/avatar',
+        formats: [
+            'png' => 'image/png',
+        ],
+        controller: GetAvatarController::class,
+    )],
     normalizationContext: ['groups' => ['get_User']],
-    denormalizationContext: ['groups' => ['set_User']]
+    denormalizationContext: ['groups' => ['set_User']],
+    openapiContext: ['content' => [
+                        'image/png' => [
+                            'schema' => [
+                                'type' => 'string',
+                                'format' => 'binary',
+                            ]
+                        ]
+                    ]
+                ]
 )]
 #[ORM\Table(name: 'user')]
 #[Get]
@@ -53,6 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\Column(type: Types::BLOB)]
+    #[Groups(['get_User'])]
     private $avatar = null;
 
     #[ORM\Column(length: 100)]
