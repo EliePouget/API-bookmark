@@ -12,10 +12,14 @@ use App\Controller\GetMeController;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
 
+#[UniqueEntity('login')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     operations: [new Get(
@@ -68,6 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180, unique: true)]
     #[Groups(['get_User', 'set_User', 'get_Me'])]
+    #[Regex('/^[^<>&"]+$/')]
     private ?string $login = null;
 
     #[ORM\Column]
@@ -82,10 +87,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 30)]
     #[Groups(['get_User', 'set_User', 'get_Me'])]
+    #[Regex('/^[^<>&"]+$/')]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 40)]
     #[Groups(['get_User', 'set_User', 'get_Me'])]
+    #[Regex('/^[^<>&"]+$/')]
     private ?string $lastname = null;
 
     #[ORM\Column(type: Types::BLOB)]
@@ -93,6 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 100)]
     #[Groups(['set_User', 'get_Me'])]
+    #[Email]
     private ?string $mail = null;
 
     public function getId(): ?int
