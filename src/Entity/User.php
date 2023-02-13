@@ -29,22 +29,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
             uriTemplate: '/me',
             controller: GetMeController::class,
             openapiContext: [
-                'description' => "Récupérer nos informations",
+                'description' => 'Récupérer ses informations',
                 'summary' => 'Permet de récupérer son id, login, firstname, lastname, email',
                 'responses' => [
                     '200' => [
-                        'description' => "Un utilisateur est retourné"
+                        'description' => 'Un utilisateur est retourné',
                         ],
                     '401' => [
-                        'description' => "Utilisateur non connecté"
+                        'description' => 'Utilisateur non connecté',
                     ],
                 ],
             ],
-
-            normalizationContext: ['groups' => 'get_Me'],
             security: "is_granted('ROLE_USER')"
         ), ],
-    normalizationContext: ['groups' => ['get_User']],
+    normalizationContext: ['groups' => ['get_User', 'get_Me']],
     denormalizationContext: ['groups' => ['set_User']],
     openapiContext: ['content' => [
                         'image/png' => [
@@ -57,7 +55,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 ]
 )]
 #[ORM\Table(name: 'user')]
-#[Get]
+#[Get(normalizationContext: ['groups' => ['get_User']])]
 #[Put(security: 'object == user')]
 #[Patch(security: 'object == user')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
