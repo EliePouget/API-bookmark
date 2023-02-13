@@ -28,7 +28,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(
             uriTemplate: '/me',
             controller: GetMeController::class,
-        ),],
+            openapiContext: [
+                'description' => "Récupérer nos informations",
+                'summary' => 'Permet de récupérer son id, login, firstname, lastname, email',
+                'responses' => [
+                    '200' => [
+                        'description' => "Un utilisateur est retourné"
+                        ],
+                    '401' => [
+                        'description' => "Utilisateur non connecté"
+                    ],
+                ],
+            ],
+
+            normalizationContext: ['groups' => 'get_Me'],
+            security: "is_granted('ROLE_USER')"
+        ), ],
     normalizationContext: ['groups' => ['get_User']],
     denormalizationContext: ['groups' => ['set_User']],
     openapiContext: ['content' => [
@@ -50,11 +65,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['get_User'])]
+    #[Groups(['get_User', 'get_Me'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['get_User', 'set_User'])]
+    #[Groups(['get_User', 'set_User', 'get_Me'])]
     private ?string $login = null;
 
     #[ORM\Column]
@@ -68,18 +83,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 30)]
-    #[Groups(['get_User', 'set_User'])]
+    #[Groups(['get_User', 'set_User', 'get_Me'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 40)]
-    #[Groups(['get_User', 'set_User'])]
+    #[Groups(['get_User', 'set_User', 'get_Me'])]
     private ?string $lastname = null;
 
     #[ORM\Column(type: Types::BLOB)]
     private $avatar = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['set_User'])]
+    #[Groups(['set_User', 'get_Me'])]
     private ?string $mail = null;
 
     public function getId(): ?int
